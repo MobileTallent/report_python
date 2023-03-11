@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pick a Report</title>
+    <!-- font-awesome -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- datepicker styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <style>
+        /* Add styles for the loading animation */
+        #loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2;
+            text-align: center;
+        }
+
+        #loading img {
+            margin-top: 20%;
+        }
+
+        .datepicker {
+            margin: 0 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fleetcontrol Solutions Reporting</h1>
+        <h2>RAW DATA EXPORT</h2>
+        <form action="/header1" method="post" onsubmit="showLoading()">
+            <div class="form-group">
+                <label for="FormControlSelect1">Choose Truck:</label>
+                <select class="form-control" id="FormControlSelect1" name="track_id">
+                {% for track in tracks %}
+                    <option value="{{ track.id }}">{{ track.label }}</option>
+                {% endfor %}
+                </select>
+            </div>
+            <input type="text" name="track_label" id="FormControlLabelSelect1" value="Access World" hidden />
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="time_period" value="24_hours" checked>24 hours
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="time_period" value="1_week">1 week
+                </label>
+            </div>
+            <div class="form-check disabled">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="time_period" value="custom">Custom time period
+                </label>
+            </div>
+
+            <div id="custom_time_period" style="display:flex;">
+                <div class="datepicker date input-group">
+                    <input type="text" placeholder="Start Date" class="form-control" id="start_date1">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="datepicker date input-group">
+                    <input type="text" placeholder="End Date" class="form-control" id="end_date1">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            
+            <input type="submit" value="Execute">
+        </form>
+        <h2>Utilization Report</h2>
+        <form action="/header2" method="post">
+            <div class="form-group">
+                <label for="FormControlSelect2">Choose Truck:</label>
+                <select class="form-control" id="FormControlSelect2" name="track_id">
+                {% for track in tracks %}
+                    <option value="{{ track.id }}">{{ track.label }}</option>
+                {% endfor %}
+                </select>
+            </div>
+            <div id="custom_time_period1" style="display:flex;">
+                <div class="datepicker date input-group">
+                    <input type="text" placeholder="Start Date" class="form-control" id="start_date2">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="datepicker date input-group">
+                    <input type="text" placeholder="End Date" class="form-control" id="end_date2">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Execute">
+        </form>
+        <h2>Different Report</h2>
+        <form action="/header3" method="post">
+            <div class="form-group">
+                <label for="FormControlSelect3">Choose Truck:</label>
+                <select class="form-control" id="FormControlSelect3" name="track_id">
+                {% for track in tracks %}
+                    <option value="{{ track.id }}">{{ track.label }}</option>
+                {% endfor %}
+                </select>
+            </div>
+            <div id="custom_time_period2" style="display:flex;">
+                <div class="datepicker date input-group">
+                    <input type="text" placeholder="Start Date" class="form-control" id="start_date3">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="datepicker date input-group">
+                    <input type="text" placeholder="End Date" class="form-control" id="end_date3">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Execute">
+        </form>
+    </div>
+
+    <!-- Add a div for the loading animation -->
+    <div id="loading">
+        <img src="/static/loading.gif" alt="Loading...">
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <!-- Datepicker -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- Add a JavaScript function to show and hide the loading animation -->
+    <script>
+        $(function () {
+            $("#FormControlSelect1").on("change", function(){
+
+                $("#FormControlLabelSelect1").val($("#FormControlSelect1 :selected").text())
+            });
+            $("#custom_time_period").hide();
+            
+            $("input[name=time_period]").on("change", function(){
+                selected_value = $("input[name='time_period']:checked").val();
+                if(selected_value != 'custom') {
+                    $("#custom_time_period").hide();
+                } else {
+                    $("#custom_time_period").show();
+                }
+            });
+
+            $('.datepicker').datepicker({
+                autoclose: true,
+                format: "dd/mm/yyyy"
+            });
+        });
+
+        function showLoading() {
+
+            // document.getElementById("loading").style.display = "block";
+        }
+    </script>
+</body>
+</html>
