@@ -1,12 +1,8 @@
 from flask import Flask, request, render_template, url_for, redirect, send_file
 import datetime
 import pandas as pd
-import os
-import threading
-from utils import excel 
+from utils import filemaker 
 from navixy_parser.navixy import Client, JournalRecord, TrackHistory, Tag, TrackTagBindings, TrackStatus
-from navixy_parser import events
-from navixy_parser.events import Event
 
 app = Flask(__name__)
 
@@ -27,43 +23,53 @@ def header1():
     now = datetime.datetime.now()
 
     if button_clicked == '24_hours':
-        start_date = now - datetime.timedelta(days=1)
-        end_date = now
+        start_date = now - datetime.timedelta(days=1).strftime("%Y-%m-%d 00:00:00")
+        end_date = now.strftime("%Y-%m-%d 23:59:59")
     elif button_clicked == '1_week':
-        start_date = now - datetime.timedelta(weeks=1)
-        end_date = now
+        start_date = now - datetime.timedelta(weeks=1).strftime("%Y-%m-%d 00:00:00")
+        end_date = now.strftime("%Y-%m-%d 23:59:59")
     else:
         # Custom time period selected
-        start_date = request.form['start_date']
-        end_date = request.form['end_date']
+        start_date = datetime.datetime.strptime(request.form['start_date'], '%Y-%m-%d')
+        end_date = datetime.datetime.strptime(request.form['end_date'], '%Y-%m-%d')
     
-    tracks = return_track_array(track_id, track_label, [], start_date.strftime("%Y-%m-%d %H:%M:%S"), end_date.strftime("%Y-%m-%d %H:%M:%S"))
+    tracks = return_track_array(track_id, track_label, [], start_date, end_date)
 
     if len(tracks) > 0:
-        print("tracks..........")
-        print(tracks)
-        print("================")
-        save_file = excel.export_data(tracks)
+        save_file = filemaker.export_data1(tracks)
         return send_file(save_file, as_attachment=True)
     else:
+        print("There is no raw data to be exported")
         return redirect(url_for('index'))
 
-@app.route('/header1/download/loading/<int:download_link_id>')
-def download_loading(download_link_id):
-    download_link = getattr(threading.local(), f'download_link_{download_link_id}', None)
-    if download_link is None:
-        return 'File not found'
-    else:
-        return render_template('download.html', download_link=download_link.get())
+@app.route('/header2', methods=['POST'])
+def header2():
+    start_date = datetime.datetime.strptime(request.form['start_date'], '%Y-%m-%d')
+    end_date = datetime.datetime.strptime(request.form['end_date'], '%Y-%m-%d')
+    track_id = request.form['track_id']
+    track_label = request.form['track_label']
 
-@app.route('/header1/download')
-def download():
-    filename = request.args.get('filename')
-    file_path = os.path.join(app.root_path, "static", filename)
-    if os.path.exists(file_path):
-        return redirect(url_for('static', filename=filename, _external=True))
-    else:
-        return 'File not found'
+    tracks = return_track_array(track_id, track_label, [], start_date, end_date)
+
+    save_file = filemaker.export_data2(tracks, track_label, start_date, end_date)
+    
+    return send_file(save_file, as_attachment=True)
+
+
+@app.route('/header3', methods=['POST'])
+def header3():
+    track_id = request.form['track_id']
+    track_label = request.form['track_label']
+    start_date = datetime.datetime.strptime(request.form['start_date'], '%Y-%m-%d')
+    end_date = datetime.datetime.strptime(request.form['end_date'], '%Y-%m-%d')
+
+    tracks = return_track_array(track_id, track_label, [], start_date, end_date)
+
+    save_file = filemaker.export_data3(tracks)
+
+    return send_file(save_file, as_attachment=True)
+
+
 
 def history_data_to_driver_journal_data(history_data: TrackHistory, journal_record: JournalRecord):
     """
