@@ -1,6 +1,5 @@
 from flask import Flask, request, render_template, url_for, redirect, send_file
 import datetime
-import pandas as pd
 from utils import filemaker 
 from navixy_parser.navixy import Client, JournalRecord, TrackHistory, Tag, TrackTagBindings, TrackStatus
 
