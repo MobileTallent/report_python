@@ -11,12 +11,6 @@ from navixy_parser import config
 
 
 
-@dataclass
-class Tag:
-    id: int
-    name: str
-    color: str
-
 
 @dataclass
 class TrackStatus:
@@ -109,23 +103,6 @@ class Client:
             logging.error(f'Error while trying to get hash! Error: {resp.text} ({resp.status_code})')
             sys.exit(1)
 
-    def get_all_tags(self) -> list[Tag]:
-
-        logging.info('Start trying to get all tags data')
-
-        endpoint_path = f'tag/list?hash={self.hash}'
-        headers = {
-            'Content-Type': 'application/json'
-        }
-        resp = requests.get(self.api_url + endpoint_path, headers=headers)
-
-        if resp.status_code == 200:
-            logging.info('Success get tags list unpacking started')
-
-            return [Tag(tag['id'], tag['name'], tag['color']) for tag in resp.json()['list']]
-        else:
-            logging.error(f'Error while trying to get tags list! Error: {resp.text} ({resp.status_code})')
-            sys.exit(1)
 
     def get_all_tracks(self) -> list[Track]:
         logging.info('Start trying to get all tracks data')
