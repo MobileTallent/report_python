@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, url_for, redirect, send_file
 import datetime
 from utils import filemaker 
-from navixy_parser.navixy import Client, JournalRecord, TrackHistory, Tag, TrackTagBindings, TrackStatus
+from navixy_parser.navixy import Client, JournalRecord, TrackHistory, TrackStatus
 
 app = Flask(__name__)
 
@@ -32,7 +32,7 @@ def header1():
         start_date = datetime.datetime.strptime(request.form['start_date'], '%Y-%m-%d')
         end_date = datetime.datetime.strptime(request.form['end_date'], '%Y-%m-%d')
     
-    tracks = return_track_array(track_id, track_label, [], start_date, end_date)
+    tracks = return_track_array(track_id, track_label, start_date, end_date)
 
     if len(tracks) > 0:
         save_file = filemaker.export_data1(tracks)
@@ -48,7 +48,7 @@ def header2():
     track_id = request.form['track_id']
     track_label = request.form['track_label']
 
-    tracks = return_track_array(track_id, track_label, [], start_date, end_date)
+    tracks = return_track_array(track_id, track_label, start_date, end_date)
 
     save_file = filemaker.export_data2(tracks, track_label, start_date, end_date)
     
@@ -62,7 +62,7 @@ def header3():
     start_date = datetime.datetime.strptime(request.form['start_date'], '%Y-%m-%d')
     end_date = datetime.datetime.strptime(request.form['end_date'], '%Y-%m-%d')
 
-    tracks = return_track_array(track_id, track_label, [], start_date, end_date)
+    tracks = return_track_array(track_id, track_label, start_date, end_date)
 
     save_file = filemaker.export_data3(tracks)
 
@@ -94,29 +94,16 @@ def create_duration(journal_record: JournalRecord) -> str:
     return str(journal_record.end_date - journal_record.start_date)
 
 
-def unpack_tag_value(tag_ordinal: int, tags_list: list[Tag], tag_bindings: list[TrackTagBindings]) -> str:
-    """
-    getting tag value
-    """
-    for track_tags in tag_bindings:
-        if track_tags.ordinal == tag_ordinal:
-            for tags in tags_list:
-                if tags.id == track_tags.tag_id:
-                    return tags.name
-    return ''
-
-
 def get_track_status(track_status: TrackStatus, journal_record: JournalRecord):
     if track_status is None:
         return None
     status_result = track_status.label if journal_record.start_date <= track_status.changed else None
     return status_result
 
-def return_track_array(track_id, track_label, tag_bindings, time_from, time_to):
+def return_track_array(track_id, track_label, time_from, time_to):
 
     print('Start creating client')
     navixy_client = Client()
-    tags_data = navixy_client.get_all_tags()
 
     events = []
     event = {}
@@ -147,9 +134,9 @@ def return_track_array(track_id, track_label, tag_bindings, time_from, time_to):
                 event["duration"] = create_duration(journal_record)
                 event["max_speed"] = history_data.max_speed
                 event["Driver"] = journal_record.employee_id
-                event["TT_number_tags"] = unpack_tag_value(1, tags_data, tag_bindings)
-                event["Registration_plate"] = unpack_tag_value(2, tags_data, tag_bindings)
-                event["Product"] = unpack_tag_value(3, tags_data, tag_bindings)
+                event["TT_number_tags"] = ''
+                event["Registration_plate"] = ''
+                event["Product"] = ''
                 event["Parked"] = trip_detection_data.ignition_aware
                 event["Idle_time"] = trip_detection_data.min_idle_duration_minutes
                 event["status"] = get_track_status(track_status, journal_record)

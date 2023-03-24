@@ -27,12 +27,6 @@ class TrackStatus:
 
 
 @dataclass
-class TrackTagBindings:
-    tag_id: int
-    ordinal: int
-
-
-@dataclass
 class TrackSource:
     id: int
     device_id: int
@@ -51,7 +45,6 @@ class Track:
     label: str
     group_id: int
     source: TrackSource
-    tag_bindings: list[TrackTagBindings]
     clone: bool
 
 
@@ -98,7 +91,7 @@ class TrackHistory:
 
 class Client:
     api_url = "https://api.fleetcontrolsol.com/"
-    hash: str = None
+    hash: str = "None"
     login = config.login
     password = config.password
 
@@ -151,7 +144,6 @@ class Client:
                                   track['source']['phone'], track['source']['status_listing_id'],
                                   datetime.datetime.strptime(track['source']['creation_date'], "%Y-%m-%d"),
                                   datetime.datetime.strptime(track['source']['tariff_end_date'], "%Y-%m-%d")),
-                      [TrackTagBindings(tags["tag_id"], tags["ordinal"]) for tags in track['tag_bindings']],
                       track['clone'])
                 for track in resp.json()['list']]
 
