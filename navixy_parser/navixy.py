@@ -104,7 +104,8 @@ class Client:
             sys.exit(1)
 
 
-    def get_all_tracks(self) -> list[Track]:
+    def get_all_tracks(self):
+        #  -> list[Track]
         logging.info('Start trying to get all tracks data')
 
         endpoint_path = f'tracker/list?hash={self.hash}'
@@ -130,7 +131,8 @@ class Client:
 
     def get_driver_journal(self, tracker_id, time_to=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                            time_from=(datetime.datetime.now() - datetime.timedelta(days=60)).strftime(
-                               "%Y-%m-%d %H:%M:%S")) -> list[JournalRecord]:
+                               "%Y-%m-%d %H:%M:%S")):
+        # -> list[JournalRecord]
 
         endpoint_path = f"driver/journal/proposal/list?hash={self.hash}" \
                         f"&tracker_id={tracker_id}" \
@@ -171,7 +173,8 @@ class Client:
 
     def get_track_history(self, tracker_id, time_to=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                            time_from=(datetime.datetime.now() - datetime.timedelta(days=60)).strftime(
-                               "%Y-%m-%d %H:%M:%S")) -> list[TrackHistory]:
+                               "%Y-%m-%d %H:%M:%S")):
+        #  -> list[TrackHistory]
 
         endpoint_path = f"track/list/?hash={self.hash}" \
                         f"&tracker_id={tracker_id}" \
@@ -194,7 +197,8 @@ class Client:
                              history_records.get('end_address')) for
                 history_records in response.json()['list']]
 
-    def get_track_status(self, tracker_id) -> Optional[TrackStatus]:
+    def get_track_status(self, tracker_id):
+        #  -> Optional[TrackStatus]
 
         endpoint_path = f'status/tracker/read?hash={self.hash}&tracker_id={tracker_id}'
         response = requests.get(self.api_url + endpoint_path)
