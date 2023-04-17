@@ -8,10 +8,6 @@ import requests
 from dataclasses import dataclass
 from navixy_parser import config
 
-
-
-
-
 @dataclass
 class TrackStatus:
     id: int
