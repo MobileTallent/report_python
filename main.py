@@ -7,12 +7,18 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-        
+    session_key = request.args.get('session_key')
+
     navixy_client = Client()
 
-    tracks = navixy_client.get_all_tracks()
+    if session_key:
+        navixy_client.hash = session_key
+
+        tracks = navixy_client.get_all_tracks()
     
-    return render_template('index.html', tracks=tracks)
+        return render_template('index.html', tracks=tracks)
+    else:
+        return render_template('error.html')
 
 @app.route('/header1', methods=['POST'])
 def header1():

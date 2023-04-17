@@ -83,15 +83,16 @@ class TrackHistory:
     end_address: str
 
 
-class Client:
+class Client():
     api_url = "https://api.fleetcontrolsol.com/"
-    hash: str = "None"
+    hash: str | None = "None"
     login = config.login
     password = config.password
 
     def __init__(self):
         logging.info('Starting navixy parser')
-        self.hash = self.get_hash()
+        # self.hash = self.get_hash()
+
 
     def get_hash(self) -> str:
         endpoint_path = f'user/auth?password={self.password}&login={self.login}'
