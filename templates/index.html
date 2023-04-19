@@ -46,6 +46,7 @@
                 </select>
             </div>
             <input type="text" name="track_label" id="FormControlLabelSelect1" value="Access World" hidden />
+            <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
             <div class="form-check">
                 <label class="form-check-label">
                     <input type="radio" class="form-check-input" name="time_period" value="24_hours" checked>24 hours
@@ -90,15 +91,16 @@
                 </select>
             </div>
             <input type="text" name="track_label" id="FormControlLabelSelect2" value="Access World" hidden />
+            <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
             <div id="custom_time_period1" style="display:flex;">
                 <div class="datepicker date input-group">
-                    <input type="text" placeholder="Start Date" class="form-control" id="start_date2" name="start_date">
+                    <input type="text" placeholder="Start Date" class="form-control" id="start_date2" name="start_date" required>
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>
                 </div>
                 <div class="datepicker date input-group">
-                    <input type="text" placeholder="End Date" class="form-control" id="end_date2" name="end_date">
+                    <input type="text" placeholder="End Date" class="form-control" id="end_date2" name="end_date" required>
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>
@@ -117,15 +119,16 @@
                 </select>
             </div>
             <input type="text" name="track_label" id="FormControlLabelSelect3" value="Access World" hidden />
+            <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
             <div id="custom_time_period2" style="display:flex;">
                 <div class="datepicker date input-group">
-                    <input type="text" placeholder="Start Date" class="form-control" id="start_date3" name="start_date">
+                    <input type="text" placeholder="Start Date" class="form-control" id="start_date3" name="start_date" required>
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>
                 </div>
                 <div class="datepicker date input-group">
-                    <input type="text" placeholder="End Date" class="form-control" id="end_date3" name="end_date">
+                    <input type="text" placeholder="End Date" class="form-control" id="end_date3" name="end_date" required>
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>
@@ -164,13 +167,19 @@
                 $("#FormControlLabelSelect3").val($("#FormControlSelect3 :selected").text())
             });
             $("#custom_time_period").hide();
+            $("#start_date1").prop('required',false);
+            $("#end_date1").prop('required',false);
             
             $("input[name=time_period]").on("change", function(){
                 selected_value = $("input[name='time_period']:checked").val();
                 if(selected_value != 'custom') {
                     $("#custom_time_period").hide();
+                    $("#start_date1").prop('required',false);
+                    $("#end_date1").prop('required',false);
                 } else {
                     $("#custom_time_period").show();
+                    $("#start_date1").prop('required',true);
+                    $("#end_date1").prop('required',true);
                 }
             });
 
