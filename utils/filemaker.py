@@ -10,8 +10,8 @@ import time
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))   # refers to application_top
 save_file1 = os.path.join(APP_ROOT, '../download/header1/data.xlsx')
-save_file2 = os.path.join(APP_ROOT, '../download/header2/data.docx')
-save_file3 = os.path.join(APP_ROOT, '../download/header3/data.docx')
+save_file2 = os.path.join(APP_ROOT, '../download/header2/data.xlsx')
+save_file3 = os.path.join(APP_ROOT, '../download/header3/data.xlsx')
 
 def export_data1(tracks):
     """Save and Export one file in excel worksheet and """
@@ -51,35 +51,34 @@ def export_data1(tracks):
     return save_file1
 
 def export_data2(tracks, track_label, start_date, end_date):
-    # create a new Word document
-    doc = docx.Document()
+    """Save and Export one file in excel worksheet and """
 
-    # add a heading to the document
-    doc.add_heading('Utilization Report', 0)
-    doc.add_paragraph(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' Africa/Luburrbashi')
-    doc.add_paragraph('Assets: any Vehicle')
-    doc.add_paragraph('From: ' + start_date.strftime("%Y-%m-%d"))
-    doc.add_paragraph('To: ' + end_date.strftime("%Y-%m-%d"))
-    doc.add_paragraph('Utilization Mode: 24 hours')
-    doc.add_paragraph('Schedule: UTILIZATION REPORTS')
+    wb = openpyxl.load_workbook(filename=save_file3)
+    ws = wb['Sheet1']
 
-    doc.add_paragraph(track_label)
+    ws['A1'].value = 'Utilization Report'
 
-    # create a table with 6 columns and 5 rows
-    table = doc.add_table(rows=1, cols=9)
-    table.style = 'Table Grid'
+    for row in ws.iter_rows(min_row=2, max_col=6):
+        for cell in row:
+            cell.value = None
 
-    # add headers to the table
-    hdr_cells = table.rows[0].cells
-    hdr_cells[0].text = 'Date'
-    hdr_cells[1].text = 'Distance'
-    hdr_cells[2].text = 'Parked'
-    hdr_cells[3].text = 'Parked Percent'
-    hdr_cells[4].text = 'Driving'
-    hdr_cells[5].text = 'Driving Percent'
-    hdr_cells[6].text = 'Idling'
-    hdr_cells[7].text = 'Idling Percent'
-    hdr_cells[8].text = 'Total Hours'
+    ws['A2'].value = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' Africa/Luburrbashi'
+    ws['A3'].value = 'Assets: any Vehicle'
+    ws['A4'].value = 'From: ' + start_date.strftime("%Y-%m-%d")
+    ws['A5'].value = 'To: ' + end_date.strftime("%Y-%m-%d")
+    ws['A6'].value = 'Utilization Mode: 24 hours'
+    ws['A7'].value = 'Schedule: UTILIZATION REPORTS'
+    ws['A8'].value = track_label
+
+    ws['A9'].value = 'Date'
+    ws['B9'].value = 'Distance'
+    ws['C9'].value = 'Parked'
+    ws['D9'].value = 'Parked Percent'
+    ws['E9'].value = 'Driving'
+    ws['F9'].value = 'Driving Percent'
+    ws['G9'].value = 'Idling'
+    ws['H9'].value = 'Idling Percent'
+    ws['I9'].value = 'Total Hours'
 
     data = []
 
@@ -163,17 +162,20 @@ def export_data2(tracks, track_label, start_date, end_date):
 
         start_date += delta
 
-    for row in data1:
-        row_cells = table.add_row().cells
-        row_cells[0].text = row[0]
-        row_cells[1].text = str(row[1])
-        row_cells[2].text = row[2]
-        row_cells[3].text = str(row[3])
-        row_cells[4].text = row[4]
-        row_cells[5].text = str(row[5])
-        row_cells[6].text = row[6]
-        row_cells[7].text = str(row[7])
-        row_cells[8].text = row[8]
+    for row_index in range(len(data1)):
+        
+        row_num = str(row_index + 10)
+        row = data1[row_index]
+
+        ws['A' + row_num].value = row[0]
+        ws['B' + row_num].value = str(row[1])
+        ws['C' + row_num].value = row[2]
+        ws['D' + row_num].value = str(row[3])
+        ws['E' + row_num].value = row[4]
+        ws['F' + row_num].value = str(row[5])
+        ws['G' + row_num].value = row[6]
+        ws['H' + row_num].value = str(row[7])
+        ws['I' + row_num].value = row[8]
 
     # create a bar chart
     category_names = ['Driving', 'Idling']
@@ -207,45 +209,46 @@ def export_data2(tracks, track_label, start_date, end_date):
     fig.savefig('dates_vs_duration.png')
 
     # add the chart to the Word document
-    doc.add_picture('dates_vs_duration.png')
-
+    img = openpyxl.drawing.image.Image('dates_vs_duration.png')
+    ws.add_image(img, 'A' + str(len(data1) + 11))
     # save the Word document
-    doc.save(save_file2) 
+    wb.save(filename=save_file2)
 
     return save_file2
 
 def export_data3(tracks):
-    # create a new Word document
-    doc = docx.Document()
+    """Save and Export one file in excel worksheet and """
 
-    # add a heading to the document
-    doc.add_heading('Geofence visits', 0)
+    wb = openpyxl.load_workbook(filename=save_file3)
+    ws = wb['Sheet1']
 
-    doc.add_paragraph(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' - intervals:17')
+    ws['A1'].value = 'Geofence visits'
 
-    # create a table with 6 columns and 5 rows
-    table = doc.add_table(rows=1, cols=6)
-    table.style = 'Table Grid'
+    for row in ws.iter_rows(min_row=2, max_col=6):
+        for cell in row:
+            cell.value = None
 
-    # add headers to the table
-    hdr_cells = table.rows[0].cells
-    hdr_cells[0].text = 'Geofence'
-    hdr_cells[1].text = 'Entrance_Time'
-    hdr_cells[2].text = 'Entrance_Place'
-    hdr_cells[3].text = 'Exit_Time'
-    hdr_cells[4].text = 'Exit_Place'
-    hdr_cells[5].text = 'Duration'
+    ws['A2'].value = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ' - intervals:17'
 
-    for row in tracks:
-        row_cells = table.add_row().cells
-        row_cells[0].text = row['track_label']
-        row_cells[1].text = row['time_start']
-        row_cells[2].text = row['from_address']
-        row_cells[3].text = row['time_end']
-        row_cells[4].text = row['to_address']
-        row_cells[5].text = row['duration']
+    ws['A4'].value = 'Geofence'
+    ws['B4'].value = 'Entrance_Time'
+    ws['C4'].value = 'Entrance_Place'
+    ws['D4'].value = 'Exit_Time'
+    ws['E4'].value = 'Exit_Place'
+    ws['F4'].value = 'Duration'
 
-    doc.save(save_file3) 
+    for row_index in range(len(tracks)):
+        row_num = str(row_index + 5)
+        row = tracks[row_index]
+
+        ws['A' + row_num].value = row['track_label']
+        ws['B' + row_num].value = row['time_start']
+        ws['C' + row_num].value = row['from_address']
+        ws['D' + row_num].value = row['time_end']
+        ws['E' + row_num].value = row['to_address']
+        ws['F' + row_num].value = row['duration']
+
+    wb.save(filename=save_file3)
 
     return save_file3
 

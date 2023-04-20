@@ -81,7 +81,7 @@
             <input type="submit" value="Execute">
         </form>
         <h2>Utilization Report</h2>
-        <form action="/header2" method="post">
+        <form action="/header2" method="post" onsubmit="showLoading()">
             <div class="form-group">
                 <label for="FormControlSelect2">Choose Truck:</label>
                 <select class="form-control" id="FormControlSelect2" name="track_id">
@@ -109,7 +109,7 @@
             <input type="submit" value="Execute">
         </form>
         <h2>Different Report</h2>
-        <form action="/header3" method="post">
+        <form action="/header3" method="post" onsubmit="showLoading()">
             <div class="form-group">
                 <label for="FormControlSelect3">Choose Truck:</label>
                 <select class="form-control" id="FormControlSelect3" name="track_id">
@@ -154,6 +154,12 @@
     <!-- Add a JavaScript function to show and hide the loading animation -->
     <script>
         $(function () {
+            document.getElementById("loading").style.display = "none";
+
+            $('button').click(function(){
+                document.getElementById("loading").style.display = "block";
+            });
+
             $("#FormControlSelect1").on("change", function(){
 
                 $("#FormControlLabelSelect1").val($("#FormControlSelect1 :selected").text())
@@ -190,8 +196,12 @@
         });
 
         function showLoading() {
+            document.getElementById("loading").style.display = "block";
 
-            // document.getElementById("loading").style.display = "block";
+            setTimeout(() => {
+                // Hide the loading screen
+                document.getElementById("loading").style.display = "none";
+            }, 2000);
         }
     </script>
 </body>
