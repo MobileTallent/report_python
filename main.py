@@ -29,12 +29,12 @@ def header1():
     now = datetime.datetime.now()
 
     if button_clicked == '24_hours':
-        start_date = now - datetime.timedelta(days=1).strftime("%Y-%m-%d 00:00:00")
+        start_date = (now - datetime.timedelta(days=1)).strftime("%Y-%m-%d 00:00:00")
         end_date = now.strftime("%Y-%m-%d 23:59:59")
 
         tracks = return_track_array(track_id, track_label, start_date, end_date, session_key)
     elif button_clicked == '1_week':
-        start_date = now - datetime.timedelta(weeks=1).strftime("%Y-%m-%d 00:00:00")
+        start_date = (now - datetime.timedelta(weeks=1)).strftime("%Y-%m-%d 00:00:00")
         end_date = now.strftime("%Y-%m-%d 23:59:59")
 
         tracks = return_track_array(track_id, track_label, start_date, end_date, session_key)
