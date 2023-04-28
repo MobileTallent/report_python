@@ -98,6 +98,26 @@ def header3():
     else:
         return redirect(url_for('index', session_key=session_key))
 
+@app.route('/header4', methods=['POST'])
+def header4():
+
+    session_key = request.form['session_key']
+    
+    if request.form['start_date'] and request.form['end_date']:
+
+        track_id = request.form['track_id']
+        track_label = request.form['track_label']
+        start_date = datetime.datetime.strptime(request.form['start_date'], '%Y-%m-%d')
+        end_date = datetime.datetime.strptime(request.form['end_date'], '%Y-%m-%d')
+
+        tracks = return_track_array(track_id, track_label, start_date, end_date, session_key)
+
+        save_file = filemaker.export_data4(tracks)
+
+        return send_file(save_file, as_attachment=True)
+    else:
+        return redirect(url_for('index', session_key=session_key))
+
 
 def history_data_to_driver_journal_data(history_data: TrackHistory, journal_record: JournalRecord):
     """
@@ -144,7 +164,6 @@ def return_track_array(track_id, track_label, time_from, time_to, session_key):
     track_journal_data = navixy_client.get_driver_journal(track_id, time_to, time_from)
     trip_detection_data = navixy_client.get_trip_detection_data(track_id)
     track_history_data = navixy_client.get_track_history(track_id, time_to, time_from)
-    track_status = navixy_client.get_track_status(track_id)
 
     for journal_record in track_journal_data:
         for history_data in track_history_data:
@@ -170,7 +189,7 @@ def return_track_array(track_id, track_label, time_from, time_to, session_key):
                 event["Product"] = ''
                 event["Parked"] = trip_detection_data.ignition_aware
                 event["Idle_time"] = trip_detection_data.min_idle_duration_minutes
-                event["status"] = get_track_status(track_status, journal_record)
+                event["status"] = ''
                 event["zone"] = f"{start_zone} > {end_zone}"
 
                 events.append(event)

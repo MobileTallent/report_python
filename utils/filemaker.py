@@ -12,6 +12,7 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))   # refers to application_
 save_file1 = os.path.join(APP_ROOT, '../download/header1/data.xlsx')
 save_file2 = os.path.join(APP_ROOT, '../download/header2/data.xlsx')
 save_file3 = os.path.join(APP_ROOT, '../download/header3/data.xlsx')
+save_file4 = os.path.join(APP_ROOT, '../download/header4/data.xlsx')
 
 def export_data1(tracks):
     """Save and Export one file in excel worksheet and """
@@ -251,6 +252,54 @@ def export_data3(tracks):
     wb.save(filename=save_file3)
 
     return save_file3
+
+def export_data4(tracks):
+
+    """Save and Export one file in excel worksheet and """
+
+    wb = openpyxl.load_workbook(filename=save_file4)
+    ws = wb['Sheet1']
+
+    ws['A1'].value = 'KAMOTO COPPER COMPANY OFFLINE DEVICES'
+    ws['C1'].value = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    ws['A3'].value = 'Clients: KAMOTO COPPER COMPANY'
+    ws['A4'].value = 'Max Hours: 96'
+    ws['A5'].value = 'Schedule: VEHICLES OFFLINE REPORT'
+    ws['A6'].value = 'KAMOTO COPPER COMPANY'
+
+    ws['A8'].value = 'Device'
+    ws['B8'].value = 'Asset'
+    ws['C8'].value = 'Last Date'
+    ws['D8'].value = 'Last Update'
+    ws['E8'].value = 'Location'
+    ws['F8'].value = 'Remarque'
+
+    for row in ws.iter_rows(min_row=9, max_col=6):
+        for cell in row:
+            cell.value = None
+
+    for row_index in range(len(tracks)):
+        row_num = str(row_index + 9)
+        row = tracks[row_index]
+
+        last_update = datetime.datetime.strptime(row['time_end'], "%Y-%m-%d %H:%M:%S").date()
+        today = datetime.datetime.today().date()
+
+        days_ago = (today - last_update).days
+        time_ago = str(days_ago) + 'days ago'
+        if days_ago > 6:
+            week_ago = int((today - last_update).days / 7)
+            time_ago = str(week_ago) + 'weeks ago'
+
+        ws['A' + row_num].value = row['track_id']
+        ws['B' + row_num].value = row['track_label']
+        ws['C' + row_num].value = row['time_end']
+        ws['D' + row_num].value = time_ago
+        ws['E' + row_num].value = row['to_address']
+        ws['F' + row_num].value = row['duration']
+
+    return save_file4
 
 def sum_times(time1, time2):
     # Convert time strings to seconds
