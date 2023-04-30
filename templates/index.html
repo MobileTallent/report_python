@@ -136,6 +136,34 @@
             </div>
             <input type="submit" value="Execute">
         </form>
+        <h2>New Report</h2>
+        <form action="/header4" method="post" onsubmit="showLoading()">
+            <div class="form-group">
+                <label for="FormControlSelect4">Choose Truck:</label>
+                <select class="form-control" id="FormControlSelect4" name="track_id">
+                {% for track in tracks %}
+                    <option value="{{ track.id }}">{{ track.label }}</option>
+                {% endfor %}
+                </select>
+            </div>
+            <input type="text" name="track_label" id="FormControlLabelSelect4" value="Access World" hidden />
+            <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
+            <div id="custom_time_period2" style="display:flex;">
+                <div class="datepicker date input-group">
+                    <input type="text" placeholder="Start Date" class="form-control" id="start_date4" name="start_date" required>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="datepicker date input-group">
+                    <input type="text" placeholder="End Date" class="form-control" id="end_date4" name="end_date" required>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Execute">
+        </form>
     </div>
 
     <!-- Add a div for the loading animation -->
@@ -171,6 +199,10 @@
             $("#FormControlSelect3").on("change", function(){
 
                 $("#FormControlLabelSelect3").val($("#FormControlSelect3 :selected").text())
+            });
+            $("#FormControlSelect4").on("change", function(){
+
+                $("#FormControlLabelSelect4").val($("#FormControlSelect4 :selected").text())
             });
             $("#custom_time_period").hide();
             $("#start_date1").prop('required',false);
