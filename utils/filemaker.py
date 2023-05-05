@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import datetime
 import time
+from openpyxl.worksheet.table import Table, TableStyleInfo
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))   # refers to application_top
 save_file1 = os.path.join(APP_ROOT, '../download/header1/data.xlsx')
@@ -260,6 +261,10 @@ def export_data4(tracks):
     wb = openpyxl.load_workbook(filename=save_file4)
     ws = wb['Sheet1']
 
+    for row in ws.iter_rows(min_row=1, max_col=6):
+        for cell in row:
+            cell.value = None
+
     ws['A1'].value = 'KAMOTO COPPER COMPANY OFFLINE DEVICES'
     ws['C1'].value = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -275,10 +280,6 @@ def export_data4(tracks):
     ws['E8'].value = 'Location'
     ws['F8'].value = 'Remarque'
 
-    for row in ws.iter_rows(min_row=9, max_col=6):
-        for cell in row:
-            cell.value = None
-
     for row_index in range(len(tracks)):
         row_num = str(row_index + 9)
         row = tracks[row_index]
@@ -287,10 +288,10 @@ def export_data4(tracks):
         today = datetime.datetime.today().date()
 
         days_ago = (today - last_update).days
-        time_ago = str(days_ago) + 'days ago'
+        time_ago = str(days_ago) + ' days ago'
         if days_ago > 6:
             week_ago = int((today - last_update).days / 7)
-            time_ago = str(week_ago) + 'weeks ago'
+            time_ago = str(week_ago) + ' weeks ago'
 
         ws['A' + row_num].value = row['track_id']
         ws['B' + row_num].value = row['track_label']
@@ -298,6 +299,27 @@ def export_data4(tracks):
         ws['D' + row_num].value = time_ago
         ws['E' + row_num].value = row['to_address']
         ws['F' + row_num].value = row['duration']
+
+    # create a table from the data
+    max_row=8+len(tracks)
+
+    table = Table(displayName="mytable", ref='A8:F'+str(max_row))
+
+    # add a style to the table
+    style = TableStyleInfo(name="TableStyleMedium2", showFirstColumn=False,
+                        showLastColumn=False, showRowStripes=True, showColumnStripes=True)
+
+    # add sort buttons to the table
+    style.showColumnStripes = False
+    style.showFirstColumn = True
+    style.showLastColumn = True
+
+    table.tableStyleInfo = style
+
+    # add the table to the worksheet
+    ws.add_table(table)
+
+    wb.save(filename=save_file4)
 
     return save_file4
 
