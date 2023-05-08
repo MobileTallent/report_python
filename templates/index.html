@@ -138,15 +138,6 @@
         </form>
         <h2>Asset Offline Report</h2>
         <form action="/header4" method="post" onsubmit="showLoading()">
-            <div class="form-group">
-                <label for="FormControlSelect4">Choose Truck:</label>
-                <select class="form-control" id="FormControlSelect4" name="track_id">
-                {% for track in tracks %}
-                    <option value="{{ track.id }}">{{ track.label }}</option>
-                {% endfor %}
-                </select>
-            </div>
-            <input type="text" name="track_label" id="FormControlLabelSelect4" value="Access World" hidden />
             <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
             <input type="submit" value="Download Report">
         </form>

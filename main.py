@@ -107,14 +107,21 @@ def header4():
     start_date = (now - datetime.timedelta(days=4)).strftime("%Y-%m-%d 00:00:00")
     end_date = now.strftime("%Y-%m-%d 23:59:59")
 
-    track_id = request.form['track_id']
-    track_label = request.form['track_label']
+    navixy_client = Client()
 
-    tracks = return_track_array(track_id, track_label, start_date, end_date, session_key)
+    if session_key:
+        navixy_client.hash = session_key
 
-    save_file = filemaker.export_data4(tracks)
+        track_ids = navixy_client.get_all_tracks()
 
-    return send_file(save_file, as_attachment=True)
+        tracks = return_tracks_array(navixy_client, track_ids, start_date, end_date)
+
+        save_file = filemaker.export_data4(tracks)
+
+        return send_file(save_file, as_attachment=True)
+
+    else:
+        return render_template('error.html')
 
 
 def history_data_to_driver_journal_data(history_data: TrackHistory, journal_record: JournalRecord):
@@ -146,6 +153,56 @@ def get_track_status(track_status: TrackStatus, journal_record: JournalRecord):
         return None
     status_result = track_status.label if journal_record.start_date <= track_status.changed else None
     return status_result
+
+
+def return_tracks_array(navixy_client, track_ids, time_from, time_to):
+    print('Start creating client')
+
+    events = []
+    event = {}
+
+    print('Parsing starting')
+
+    for track in track_ids:
+        track_id = track.id
+        track_label = track.label
+
+        track_journal_data = navixy_client.get_driver_journal(track_id, time_to, time_from)
+        trip_detection_data = navixy_client.get_trip_detection_data(track_id)
+        track_history_data = navixy_client.get_track_history(track_id, time_to, time_from)
+
+        for journal_record in track_journal_data:
+            for history_data in track_history_data:
+                event = {}
+                if history_data_to_driver_journal_data(history_data, journal_record):
+                    start_zone = navixy_client.get_zone(journal_record.start_location.lat,
+                                                    journal_record.start_location.lng)
+                    end_zone = navixy_client.get_zone(journal_record.end_location.lat,
+                                                        journal_record.end_location.lng)
+                    event["record_id"] = history_data.id
+                    event["track_id"] = track_id
+                    event["track_label"] = track_label
+                    event["time_start"] = journal_record.start_date.strftime("%Y-%m-%d %H:%M:%S")
+                    event["time_end"] = journal_record.end_date.strftime("%Y-%m-%d %H:%M:%S")
+                    event["from_address"] = journal_record.start_location.address
+                    event["to_address"] = journal_record.end_location.address
+                    event["distance"] = journal_record.length
+                    event["duration"] = create_duration(journal_record)
+                    event["max_speed"] = history_data.max_speed
+                    event["Driver"] = journal_record.employee_id
+                    event["TT_number_tags"] = ''
+                    event["Registration_plate"] = ''
+                    event["Product"] = ''
+                    event["Parked"] = trip_detection_data.ignition_aware
+                    event["Idle_time"] = trip_detection_data.min_idle_duration_minutes
+                    event["status"] = ''
+                    event["zone"] = f"{start_zone} > {end_zone}"
+
+                    events.append(event)
+                    print(f'Data from date {journal_record.start_date} for track {track_id} recorded')
+        print('Iteration done, sleep 15 sec')
+
+    return events
 
 def return_track_array(track_id, track_label, time_from, time_to, session_key):
 
