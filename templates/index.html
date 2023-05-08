@@ -78,7 +78,7 @@
                 </div>
             </div>
             
-            <input type="submit" value="Execute">
+            <input type="submit" value="Download Report">
         </form>
         <h2>Utilization Report</h2>
         <form action="/header2" method="post" onsubmit="showLoading()">
@@ -106,7 +106,7 @@
                     </div>
                 </div>
             </div>
-            <input type="submit" value="Execute">
+            <input type="submit" value="Download Report">
         </form>
         <h2>Different Report</h2>
         <form action="/header3" method="post" onsubmit="showLoading()">
@@ -134,9 +134,9 @@
                     </div>
                 </div>
             </div>
-            <input type="submit" value="Execute">
+            <input type="submit" value="Download Report">
         </form>
-        <h2>Asset online Report</h2>
+        <h2>Asset Offline Report</h2>
         <form action="/header4" method="post" onsubmit="showLoading()">
             <div class="form-group">
                 <label for="FormControlSelect4">Choose Truck:</label>
@@ -148,21 +148,7 @@
             </div>
             <input type="text" name="track_label" id="FormControlLabelSelect4" value="Access World" hidden />
             <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
-            <div id="custom_time_period2" style="display:flex;">
-                <div class="datepicker date input-group">
-                    <input type="text" placeholder="Start Date" class="form-control" id="start_date4" name="start_date" required>
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                    </div>
-                </div>
-                <div class="datepicker date input-group">
-                    <input type="text" placeholder="End Date" class="form-control" id="end_date4" name="end_date" required>
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                    </div>
-                </div>
-            </div>
-            <input type="submit" value="Execute">
+            <input type="submit" value="Download Report">
         </form>
     </div>
 
