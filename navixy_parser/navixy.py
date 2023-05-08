@@ -107,7 +107,7 @@ class Client():
 
         endpoint_path = f'tracker/list?hash={self.hash}'
 
-        resp = requests.get(self.api_url + endpoint_path)
+        resp = requests.get(self.api_url + endpoint_path, verify=False)
         if resp.status_code != 200:
             logging.error(f'Error while trying to get tracks list! Error: {resp.text} ({resp.status_code})')
             sys.exit(1)
@@ -135,7 +135,7 @@ class Client():
                         f"&tracker_id={tracker_id}" \
                         f"&from={time_from}&to={time_to}"
 
-        response = requests.get(self.api_url + endpoint_path)
+        response = requests.get(self.api_url + endpoint_path, verify=False)
 
         if response.status_code != 200:
             logging.error(f'Error while trying to get tracks journal data list! '
@@ -158,7 +158,7 @@ class Client():
     def get_trip_detection_data(self, tracker_id):
         endpoint_path = f"tracker/settings/trip_detection/read?hash={self.hash}&tracker_id={tracker_id}"
 
-        response = requests.get(self.api_url + endpoint_path)
+        response = requests.get(self.api_url + endpoint_path, verify=False)
 
         if response.status_code != 200:
             logging.error(f'Error while trying to get track ({tracker_id}) trip_detection! '
@@ -177,7 +177,7 @@ class Client():
                         f"&tracker_id={tracker_id}" \
                         f"&from={time_from}&to={time_to}"
 
-        response = requests.get(self.api_url + endpoint_path)
+        response = requests.get(self.api_url + endpoint_path, verify=False)
 
         if response.status_code != 200:
             logging.error(f'Error while trying to get track ({tracker_id}) history journal! '
@@ -198,7 +198,7 @@ class Client():
         #  -> Optional[TrackStatus]
 
         endpoint_path = f'status/tracker/read?hash={self.hash}&tracker_id={tracker_id}'
-        response = requests.get(self.api_url + endpoint_path)
+        response = requests.get(self.api_url + endpoint_path, verify=False)
 
         if response.status_code != 200:
             logging.error(f'Error while trying to get track ({tracker_id}) status! '
@@ -217,7 +217,7 @@ class Client():
         coord_data = json.dumps({"lat": lat, "lng": lng})
 
         endpoint_path = f'zone/search_location/?hash={self.hash}&location={coord_data}'
-        response = requests.get(self.api_url + endpoint_path)
+        response = requests.get(self.api_url + endpoint_path, verify=False)
 
         if response.status_code != 200:
             logging.error(f'Error while trying to get zone_list! '
