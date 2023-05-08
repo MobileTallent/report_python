@@ -102,21 +102,19 @@ def header3():
 def header4():
 
     session_key = request.form['session_key']
+    now = datetime.datetime.now()
     
-    if request.form['start_date'] and request.form['end_date']:
+    start_date = (now - datetime.timedelta(days=4)).strftime("%Y-%m-%d 00:00:00")
+    end_date = now.strftime("%Y-%m-%d 23:59:59")
 
-        track_id = request.form['track_id']
-        track_label = request.form['track_label']
-        start_date = datetime.datetime.strptime(request.form['start_date'], '%Y-%m-%d')
-        end_date = datetime.datetime.strptime(request.form['end_date'], '%Y-%m-%d')
+    track_id = request.form['track_id']
+    track_label = request.form['track_label']
 
-        tracks = return_track_array(track_id, track_label, start_date, end_date, session_key)
+    tracks = return_track_array(track_id, track_label, start_date, end_date, session_key)
 
-        save_file = filemaker.export_data4(tracks)
+    save_file = filemaker.export_data4(tracks)
 
-        return send_file(save_file, as_attachment=True)
-    else:
-        return redirect(url_for('index', session_key=session_key))
+    return send_file(save_file, as_attachment=True)
 
 
 def history_data_to_driver_journal_data(history_data: TrackHistory, journal_record: JournalRecord):
