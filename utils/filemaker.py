@@ -269,7 +269,7 @@ def export_data4(tracks):
     ws['C1'].value = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     ws['A3'].value = 'Clients: KAMOTO COPPER COMPANY'
-    ws['A4'].value = 'Max Hours: 96'
+    ws['A4'].value = 'Max Hours: 24'
     ws['A5'].value = 'Schedule: VEHICLES OFFLINE REPORT'
     ws['A6'].value = 'KAMOTO COPPER COMPANY'
 

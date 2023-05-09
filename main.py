@@ -104,7 +104,7 @@ def header4():
     session_key = request.form['session_key']
     now = datetime.datetime.now()
     
-    start_date = (now - datetime.timedelta(days=4)).strftime("%Y-%m-%d 00:00:00")
+    start_date = (now - datetime.timedelta(days=1)).strftime("%Y-%m-%d 00:00:00")
     end_date = now.strftime("%Y-%m-%d 23:59:59")
 
     navixy_client = Client()
