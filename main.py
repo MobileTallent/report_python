@@ -104,7 +104,7 @@ def header4():
     session_key = request.form['session_key']
     now = datetime.datetime.now()
     
-    start_date = (now - datetime.timedelta(days=1)).strftime("%Y-%m-%d 00:00:00")
+    start_date = (now - datetime.timedelta(days=4)).strftime("%Y-%m-%d 00:00:00")
     end_date = now.strftime("%Y-%m-%d 23:59:59")
 
     navixy_client = Client()
@@ -159,47 +159,27 @@ def return_tracks_array(navixy_client, track_ids, time_from, time_to):
     print('Start creating client')
 
     events = []
-    event = {}
-
-    print('Parsing starting')
 
     for track in track_ids:
         track_id = track.id
         track_label = track.label
 
         track_journal_data = navixy_client.get_driver_journal(track_id, time_to, time_from)
-        trip_detection_data = navixy_client.get_trip_detection_data(track_id)
-        track_history_data = navixy_client.get_track_history(track_id, time_to, time_from)
+
+        event = {}
 
         for journal_record in track_journal_data:
-            for history_data in track_history_data:
-                event = {}
-                if history_data_to_driver_journal_data(history_data, journal_record):
-                    start_zone = navixy_client.get_zone(journal_record.start_location.lat,
-                                                    journal_record.start_location.lng)
-                    end_zone = navixy_client.get_zone(journal_record.end_location.lat,
-                                                        journal_record.end_location.lng)
-                    event["record_id"] = history_data.id
-                    event["track_id"] = track_id
-                    event["track_label"] = track_label
-                    event["time_start"] = journal_record.start_date.strftime("%Y-%m-%d %H:%M:%S")
-                    event["time_end"] = journal_record.end_date.strftime("%Y-%m-%d %H:%M:%S")
-                    event["from_address"] = journal_record.start_location.address
-                    event["to_address"] = journal_record.end_location.address
-                    event["distance"] = journal_record.length
-                    event["duration"] = create_duration(journal_record)
-                    event["max_speed"] = history_data.max_speed
-                    event["Driver"] = journal_record.employee_id
-                    event["TT_number_tags"] = ''
-                    event["Registration_plate"] = ''
-                    event["Product"] = ''
-                    event["Parked"] = trip_detection_data.ignition_aware
-                    event["Idle_time"] = trip_detection_data.min_idle_duration_minutes
-                    event["status"] = ''
-                    event["zone"] = f"{start_zone} > {end_zone}"
 
-                    events.append(event)
-                    print(f'Data from date {journal_record.start_date} for track {track_id} recorded')
+            event["track_id"] = track_id
+            event["track_label"] = track_label
+            event["time_start"] = journal_record.start_date.strftime("%Y-%m-%d %H:%M:%S")
+            event["time_end"] = journal_record.end_date.strftime("%Y-%m-%d %H:%M:%S")
+            event["from_address"] = journal_record.start_location.address
+            event["to_address"] = journal_record.end_location.address
+            event["duration"] = create_duration(journal_record)
+
+            events.append(event)
+            print(f'Data from date {journal_record.start_date} for track {track_id} recorded')
         print('Iteration done, sleep 15 sec')
 
     return events
