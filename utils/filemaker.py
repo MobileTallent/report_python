@@ -280,27 +280,30 @@ def export_data4(tracks):
     ws['E8'].value = 'Location'
     ws['F8'].value = 'Remarque'
 
+    row_num = 0
+
     for row_index in range(len(tracks)):
-        row_num = str(row_index + 9)
         row = tracks[row_index]
 
         last_update = datetime.datetime.strptime(row['time_end'], "%Y-%m-%d %H:%M:%S").date()
         today = datetime.datetime.today().date()
 
         days_ago = (today - last_update).days
-        time_ago = str(days_ago) + ' days ago'
-        if days_ago > 6:
-            week_ago = int((today - last_update).days / 7)
-            time_ago = str(week_ago) + ' weeks ago'
 
         if days_ago > 0:
+            time_ago = str(days_ago) + ' days ago'
+            if days_ago > 6:
+                week_ago = int((today - last_update).days / 7)
+                time_ago = str(week_ago) + ' weeks ago'        
 
-            ws['A' + row_num].value = row['track_id']
-            ws['B' + row_num].value = row['track_label']
-            ws['C' + row_num].value = row['time_end']
-            ws['D' + row_num].value = time_ago
-            ws['E' + row_num].value = row['to_address']
-            ws['F' + row_num].value = row['duration']
+            row_num = row_num + 1
+
+            ws['A' + str(row_num)].value = row['track_id']
+            ws['B' + str(row_num)].value = row['track_label']
+            ws['C' + str(row_num)].value = row['time_end']
+            ws['D' + str(row_num)].value = time_ago
+            ws['E' + str(row_num)].value = row['to_address']
+            ws['F' + str(row_num)].value = row['duration']
 
     # create a table from the data
     max_row=8+len(tracks)
