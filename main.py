@@ -168,7 +168,8 @@ def return_tracks_array(navixy_client, track_ids, time_from, time_to):
 
         event = {}
 
-        for journal_record in track_journal_data:
+        if len(track_journal_data) > 0:
+            journal_record = track_journal_data[len(track_journal_data) - 1]
 
             event["track_id"] = track_id
             event["track_label"] = track_label

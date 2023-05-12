@@ -261,7 +261,7 @@ def export_data4(tracks):
     wb = openpyxl.load_workbook(filename=save_file4)
     ws = wb['Sheet1']
 
-    for row in ws.iter_rows(min_row=1, max_col=6):
+    for row in ws.iter_rows(min_row=1, max_col=10):
         for cell in row:
             cell.value = None
 
@@ -293,17 +293,19 @@ def export_data4(tracks):
             week_ago = int((today - last_update).days / 7)
             time_ago = str(week_ago) + ' weeks ago'
 
-        ws['A' + row_num].value = row['track_id']
-        ws['B' + row_num].value = row['track_label']
-        ws['C' + row_num].value = row['time_end']
-        ws['D' + row_num].value = time_ago
-        ws['E' + row_num].value = row['to_address']
-        ws['F' + row_num].value = row['duration']
+        if days_ago > 0:
+
+            ws['A' + row_num].value = row['track_id']
+            ws['B' + row_num].value = row['track_label']
+            ws['C' + row_num].value = row['time_end']
+            ws['D' + row_num].value = time_ago
+            ws['E' + row_num].value = row['to_address']
+            ws['F' + row_num].value = row['duration']
 
     # create a table from the data
     max_row=8+len(tracks)
 
-    table = Table(displayName="mytable", ref='A8:F'+str(max_row))
+    table = Table(displayName=datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"), ref='A8:F'+str(max_row))
 
     # add a style to the table
     style = TableStyleInfo(name="TableStyleMedium2", showFirstColumn=False,
