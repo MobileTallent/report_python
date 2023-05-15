@@ -280,7 +280,7 @@ def export_data4(tracks):
     ws['E8'].value = 'Location'
     ws['F8'].value = 'Remarque'
 
-    row_num = 0
+    row_num = 8
 
     for row_index in range(len(tracks)):
         row = tracks[row_index]
@@ -291,7 +291,10 @@ def export_data4(tracks):
         days_ago = (today - last_update).days
 
         if days_ago > 0:
-            time_ago = str(days_ago) + ' days ago'
+            if days_ago == 1:
+                time_ago = str(days_ago) + ' day ago'
+            else:
+                time_ago = str(days_ago) + ' days ago'
             if days_ago > 6:
                 week_ago = int((today - last_update).days / 7)
                 time_ago = str(week_ago) + ' weeks ago'        
