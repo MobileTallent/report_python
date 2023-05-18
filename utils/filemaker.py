@@ -308,24 +308,21 @@ def export_data4(tracks):
             ws['E' + str(row_num)].value = row['to_address']
             ws['F' + str(row_num)].value = row['duration']
 
-    # create a table from the data
-    max_row=8+len(tracks)
+    # if len(tracks) > 0:
+    #     max_row = 8 + len(tracks)
 
-    table = Table(displayName=datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"), ref='A8:F'+str(max_row))
+    #     table = Table(displayName="table"+datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"), ref='A8:F'+str(max_row))
 
-    # add a style to the table
-    style = TableStyleInfo(name="TableStyleMedium2", showFirstColumn=False,
-                        showLastColumn=False, showRowStripes=True, showColumnStripes=True)
+    #     style = TableStyleInfo(name="TableStyleMedium2", showFirstColumn=False,
+    #                         showLastColumn=False, showRowStripes=True, showColumnStripes=True)
 
-    # add sort buttons to the table
-    style.showColumnStripes = False
-    style.showFirstColumn = True
-    style.showLastColumn = True
+    #     style.showColumnStripes = False
+    #     style.showFirstColumn = True
+    #     style.showLastColumn = True
 
-    table.tableStyleInfo = style
+    #     table.tableStyleInfo = style
 
-    # add the table to the worksheet
-    ws.add_table(table)
+    #     ws.add_table(table)
 
     wb.save(filename=save_file4)
 
