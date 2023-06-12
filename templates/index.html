@@ -34,113 +34,120 @@
 </head>
 <body>
     <div class="container">
-        <h1>Fleetcontrol Solutions Reporting</h1>
-        <h2>RAW DATA EXPORT</h2>
-        <form action="/header1" method="post" onsubmit="showLoading()">
-            <div class="form-group">
-                <label for="FormControlSelect1">Choose Truck:</label>
-                <select class="form-control" id="FormControlSelect1" name="track_id">
-                {% for track in tracks %}
-                    <option value="{{ track.id }}">{{ track.label }}</option>
-                {% endfor %}
-                </select>
-            </div>
-            <input type="text" name="track_label" id="FormControlLabelSelect1" value="Access World" hidden />
-            <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
-            <div class="form-check">
-                <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="time_period" value="24_hours" checked>24 hours
-                </label>
-            </div>
-            <div class="form-check">
-                <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="time_period" value="1_week">1 week
-                </label>
-            </div>
-            <div class="form-check disabled">
-                <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="time_period" value="custom">Custom time period
-                </label>
-            </div>
-
-            <div id="custom_time_period" style="display:flex;">
-                <div class="datepicker date input-group">
-                    <input type="text" placeholder="Start Date" class="form-control" id="start_date1" name="start_date">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Fleetcontrol Solutions Reporting</h1>
+                <h2>RAW DATA EXPORT</h2>
+                <form action="/header1" method="post" onsubmit="showLoading()">
+                    <div class="form-group">
+                        <label for="FormControlSelect1">Choose Truck:</label>
+                        <select class="form-control" id="FormControlSelect1" name="track_id">
+                        {% for track in tracks %}
+                            <option value="{{ track.id }}">{{ track.label }}</option>
+                        {% endfor %}
+                        </select>
                     </div>
-                </div>
-                <div class="datepicker date input-group">
-                    <input type="text" placeholder="End Date" class="form-control" id="end_date1" name="end_date">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    <input type="text" name="track_label" id="FormControlLabelSelect1" value="Access World" hidden />
+                    <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="time_period" value="24_hours" checked>24 hours
+                        </label>
                     </div>
-                </div>
-            </div>
-            
-            <input type="submit" value="Download Report">
-        </form>
-        <h2>Utilization Report</h2>
-        <form action="/header2" method="post" onsubmit="showLoading()">
-            <div class="form-group">
-                <label for="FormControlSelect2">Choose Truck:</label>
-                <select class="form-control" id="FormControlSelect2" name="track_id">
-                {% for track in tracks %}
-                    <option value="{{ track.id }}">{{ track.label }}</option>
-                {% endfor %}
-                </select>
-            </div>
-            <input type="text" name="track_label" id="FormControlLabelSelect2" value="Access World" hidden />
-            <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
-            <div id="custom_time_period1" style="display:flex;">
-                <div class="datepicker date input-group">
-                    <input type="text" placeholder="Start Date" class="form-control" id="start_date2" name="start_date" required>
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="time_period" value="1_week">1 week
+                        </label>
                     </div>
-                </div>
-                <div class="datepicker date input-group">
-                    <input type="text" placeholder="End Date" class="form-control" id="end_date2" name="end_date" required>
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    <div class="form-check disabled">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="time_period" value="custom">Custom time period
+                        </label>
                     </div>
-                </div>
-            </div>
-            <input type="submit" value="Download Report">
-        </form>
-        <h2>Different Report</h2>
-        <form action="/header3" method="post" onsubmit="showLoading()">
-            <div class="form-group">
-                <label for="FormControlSelect3">Choose Truck:</label>
-                <select class="form-control" id="FormControlSelect3" name="track_id">
-                {% for track in tracks %}
-                    <option value="{{ track.id }}">{{ track.label }}</option>
-                {% endfor %}
-                </select>
-            </div>
-            <input type="text" name="track_label" id="FormControlLabelSelect3" value="Access World" hidden />
-            <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
-            <div id="custom_time_period2" style="display:flex;">
-                <div class="datepicker date input-group">
-                    <input type="text" placeholder="Start Date" class="form-control" id="start_date3" name="start_date" required>
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+        
+                    <div id="custom_time_period" style="display:flex;">
+                        <div class="datepicker date input-group">
+                            <input type="text" placeholder="Start Date" class="form-control" id="start_date1" name="start_date">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                        <div class="datepicker date input-group">
+                            <input type="text" placeholder="End Date" class="form-control" id="end_date1" name="end_date">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="datepicker date input-group">
-                    <input type="text" placeholder="End Date" class="form-control" id="end_date3" name="end_date" required>
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    
+                    <input type="submit" value="Download Report">
+                </form>
+                <h2>Utilization Report</h2>
+                <form action="/header2" method="post" onsubmit="showLoading()">
+                    <div class="form-group">
+                        <label for="FormControlSelect2">Choose Truck:</label>
+                        <select class="form-control" id="FormControlSelect2" name="track_id">
+                        {% for track in tracks %}
+                            <option value="{{ track.id }}">{{ track.label }}</option>
+                        {% endfor %}
+                        </select>
                     </div>
-                </div>
+                    <input type="text" name="track_label" id="FormControlLabelSelect2" value="Access World" hidden />
+                    <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
+                    <div id="custom_time_period1" style="display:flex;">
+                        <div class="datepicker date input-group">
+                            <input type="text" placeholder="Start Date" class="form-control" id="start_date2" name="start_date" required>
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                        <div class="datepicker date input-group">
+                            <input type="text" placeholder="End Date" class="form-control" id="end_date2" name="end_date" required>
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" value="Download Report">
+                </form>
+                <h2>Different Report</h2>
+                <form action="/header3" method="post" onsubmit="showLoading()">
+                    <div class="form-group">
+                        <label for="FormControlSelect3">Choose Truck:</label>
+                        <select class="form-control" id="FormControlSelect3" name="track_id">
+                        {% for track in tracks %}
+                            <option value="{{ track.id }}">{{ track.label }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <input type="text" name="track_label" id="FormControlLabelSelect3" value="Access World" hidden />
+                    <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
+                    <div id="custom_time_period2" style="display:flex;">
+                        <div class="datepicker date input-group">
+                            <input type="text" placeholder="Start Date" class="form-control" id="start_date3" name="start_date" required>
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                        <div class="datepicker date input-group">
+                            <input type="text" placeholder="End Date" class="form-control" id="end_date3" name="end_date" required>
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" value="Download Report">
+                </form>
+                <h2>Asset Offline Report</h2>
+                <form action="/header4" method="post" onsubmit="showLoading()">
+                    <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
+                    <input type="submit" value="Download Report">
+                </form>
             </div>
-            <input type="submit" value="Download Report">
-        </form>
-        <h2>Asset Offline Report</h2>
-        <form action="/header4" method="post" onsubmit="showLoading()">
-            <input type="text" name="session_key" id="FormControlLabelSelect1" value="{{ session_key }}" hidden />
-            <input type="submit" value="Download Report">
-        </form>
+            <div class="col-md-6">
+                <iframe src="https://fleet.m2m-ghana.com"></iframe>
+            </div>
+        </div>
     </div>
 
     <!-- Add a div for the loading animation -->
