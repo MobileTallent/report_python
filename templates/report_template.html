@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Track Report</h1>
+    <table>
+        <tr>
+            <th>Track ID</th>
+            <th>Track Label</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>From Address</th>
+            <th>To Address</th>
+            <th>Other Fields...</th>
+        </tr>
+        {% for track in tracks %}
+            <tr>
+                <td>{{ track.track_id }}</td>
+                <td>{{ track.track_label }}</td>
+                <td>{{ track.time_start }}</td>
+                <td>{{ track.time_end }}</td>
+                <td>{{ track.from_address }}</td>
+                <td>{{ track.to_address }}</td>
+                <td><!-- Other fields here --></td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+

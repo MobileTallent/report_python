@@ -79,6 +79,31 @@ class TrackHistory:
     end_address: str
 
 
+
+class Tag:
+    def __init__(self, id: int, name: str):
+        self.id = id
+        self.name = name
+
+
+class TrackTagBindings:
+    def __init__(self, tag_id: int, ordinal: int):
+        self.tag_id = tag_id
+        self.ordinal = ordinal
+
+
+def unpack_tag_value(tag_ordinal: int, tags_list: list[Tag], tag_bindings: list[TrackTagBindings]) -> str:
+    for track_tags in tag_bindings:
+        if track_tags.ordinal == tag_ordinal:
+            for tag in tags_list:
+                if tag.id == track_tags.tag_id:
+                    return tag.name
+
+
+
+
+
+
 class Client():
     api_url = "https://api.fleetcontrolsol.com/"
     hash: str | None = "None"
@@ -99,6 +124,65 @@ class Client():
         else:
             logging.error(f'Error while trying to get hash! Error: {resp.text} ({resp.status_code})')
             sys.exit(1)
+
+    def get_all_tags(self) -> list[Tag]:
+
+        logging.info('Start trying to get all tags data')
+
+        endpoint_path = f'tag/list?hash={self.hash}'
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        resp = requests.get(self.api_url + endpoint_path, headers=headers)
+
+        if resp.status_code == 200:
+            logging.info('Success get tags list unpacking started')
+
+            return [Tag(tag['id'], tag['name']) for tag in resp.json()['list']]
+        else:
+            logging.error(f'Error while trying to get tags list! Error: {resp.text} ({resp.status_code})')
+            sys.exit(1)
+
+
+    def get_all_tracks_with_tag_bindings(self):
+        endpoint_path = f"tracker/list?hash={self.hash}"
+        response = requests.get(self.api_url + endpoint_path, verify=False)
+        
+        if response.status_code == 200:
+            data = response.json()
+            tracks = []
+            tag_bindings = []
+            
+            for item in data['list']:
+                # Construct Track object (as previously defined)
+                track = Track(
+                    id=item['id'],
+                    label=item['label'],
+                    group_id=item['group_id'],
+                    source=TrackSource(
+                        id=item['source']['id'],
+                        device_id=item['source']['device_id'],
+                        model=item['source']['model'],
+                        blocked=item['source']['blocked'],
+                        tariff_id=item['source']['tariff_id'],
+                        phone=item['source']['phone'],
+                        status_listing_id=item['source']['status_listing_id'],
+                        creation_date=datetime.datetime.strptime(item['source']['creation_date'], "%Y-%m-%d"),
+                        tariff_end_date=datetime.datetime.strptime(item['source']['tariff_end_date'], "%Y-%m-%d"),
+                    ),
+                    clone=item['clone']
+                )
+                tracks.append(track)
+
+                # Process Tag Bindings for the current tracker
+                for binding in item.get('tag_bindings', []):
+                    tag_binding = TrackTagBindings(tag_id=binding['tag_id'], ordinal=binding['ordinal'])
+                    tag_bindings.append(tag_binding)
+
+            return tracks, tag_bindings
+        else:
+            logging.error(f"Failed to fetch tracks and tag bindings: {response.text}")
+            return [], []
 
 
     def get_all_tracks(self):
@@ -229,4 +313,5 @@ class Client():
             return None
 
 
+   
 
