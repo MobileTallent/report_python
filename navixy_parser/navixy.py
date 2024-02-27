@@ -175,9 +175,9 @@ class Client():
                 tracks.append(track)
 
                 # Process Tag Bindings for the current tracker
-                for binding in item.get('tag_bindings', []):
-                    tag_binding = TrackTagBindings(tag_id=binding['tag_id'], ordinal=binding['ordinal'])
-                    tag_bindings.append(tag_binding)
+                # for binding in item.get('tag_bindings', []):
+                #     tag_binding = TrackTagBindings(tag_id=binding['tag_id'], ordinal=binding['ordinal'])
+                #     tag_bindings.append(tag_binding)
 
             return tracks, tag_bindings
         else:
