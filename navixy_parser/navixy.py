@@ -95,7 +95,7 @@ class TrackTagBindings:
 def unpack_tag_value(tag_ordinal: int, tags_list: list[Tag], tag_bindings: list[TrackTagBindings]) -> str:
     for track_tags in tag_bindings:
         # if track_tags.ordinal == tag_ordinal:
-        if track_tags.tag_id:
+        if hasattr(track_tags, 'tag_id'):
             for tag in tags_list:
                 if tag.id == track_tags.tag_id:
                     return tag.name
