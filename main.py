@@ -582,7 +582,7 @@ def return_track_array(track_id, track_label, time_from, time_to, session_key):
     track_journal_data = navixy_client.get_driver_journal(track_id, time_to, time_from)
     trip_detection_data = navixy_client.get_trip_detection_data(track_id)
     track_history_data = navixy_client.get_track_history(track_id, time_to, time_from)
-    # tags_data = navixy_client.get_all_tags()
+    tags_data = navixy_client.get_all_tags()
     # tag_bindings = navixy_client.get_all_tracks_with_tag_bindings()
 
     for journal_record in track_journal_data:
@@ -604,9 +604,9 @@ def return_track_array(track_id, track_label, time_from, time_to, session_key):
                 event["duration"] = create_duration(journal_record)
                 event["max_speed"] = history_data.max_speed
                 event["Driver"] = journal_record.employee_id
-                event["TT_number_tags"] = '' # unpack_tag_value(1, tags_data, [])
-                event["Registration_plate"] = '' # unpack_tag_value(2, tags_data, [])
-                event["Product"] = '' # unpack_tag_value(3, tags_data, [])
+                event["TT_number_tags"] = unpack_tag_value(1, tags_data, [])
+                event["Registration_plate"] = unpack_tag_value(2, tags_data, [])
+                event["Product"] = unpack_tag_value(3, tags_data, [])
                 event["Parked"] = trip_detection_data.ignition_aware
                 event["Idle_time"] = trip_detection_data.min_idle_duration_minutes
                 event["zone"] = f"{start_zone} > {end_zone}"
